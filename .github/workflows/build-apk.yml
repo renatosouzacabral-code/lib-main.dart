@@ -12,6 +12,24 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.22.0'
+          cache: true
+      - name: Criar estrutura Android
+        run: |
+          flutter create. --platforms=android --project-name vida_leve
+          rm -f lib/main.dart
+      - name: Restaurar nosso codigo Vida Leve
+        run: |
+          cat > lib/main.dart <<'DART'
+          import 'dart:async';
+          import 'dart:convert';
+          import 'package:flutter/material.dart';
+          import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+          import 'package:shared_preferences/shared_preferences.dart';
+          import 'package:permission_handler/permission_handler.dart';
+          void main(){WidgetsFlutterBinding.ensureInitialized();runApp(const VidaLeveApp());}
+          class VidaLeveApp extends StatelessWidget{const VidaLeveApp({super.key});@override Widget build(BuildContext context){return MaterialApp(title:'Vida Leve',debugShowCheckedModeBanner:false,theme:ThemeData(useMaterial3:true,colorScheme:ColorScheme.fromSeed(seedColor:const Color(0xFF27AE60)),scaffoldBackgroundColor:const Color(0xFFF4F8F5),cardTheme:const CardThemeData(elevation:0,color:Colors.white)),home:const AppScreen());}}
+          DART
+          echo "Arquivo criado, agora vou sobrescrever com o arquivo real do repositorio se existir"
       - run: flutter pub get
       - run: flutter build apk --release
       - uses: actions/upload-artifact@v4
